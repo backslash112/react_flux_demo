@@ -2,34 +2,43 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 
-var tweet = null;
+var _tweets = {};
+var CHANGE_EVENT = 'change';
 
-function setTweet(receivedTweet) {
-	tweet = receivedTweet;
-}
-
-function emitChange() {
-	TweetStore.emit('change');
+function create(text) {
+	var id = Date.now();
+	_tweets[id] = {
+		id: id,
+		text: text
+	};
 }
 
 var TweetStore = assign({}, EventEmitter.prototype, {
 	addChangeListener: function (callback) {
-
+		this.on(CHANGE_EVENT, callback)
 	},
 
 	removeChangeListener: function (callback) {
-
+		this.removeListener(CHANGE_EVENT, callback);
 	},
 
-	getTweet: function() {
-		return tweet;
+	getAll: function() {
+		var id = Date.now();
+		_tweets[id] = {
+			id: id,
+			text: 'item'+id
+		};
+		return _tweets;
+	},
+	emitChange: function() {
+		this.emit(CHANGE_EVENT);
 	}
 });
 
 function handleAction(action) {
 	if (action.type === 'receive_tweet') {
-		setTweet(action.tweet);
-		emitChange();
+		create(action.text);
+		TweetStore.emitChange();
 	}
 }
 
