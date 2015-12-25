@@ -19019,13 +19019,82 @@ module.exports = require('./lib/React');
 },{"./lib/React":53}],159:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
+var Application = require('./components/Application.react');
 
-var ReactClass = React.createClass({
-	render: function () {
-		return React.createElement('h1', { className: 'header' }, 'React Component');
+
+// var ReactClass = React.createClass({
+// 	render: function() {
+// 		return React.createElement('h1', {className: 'header'}, 'React Component');
+// 	}
+// });
+// var reactComponentElement = React.createElement(Application);
+// var reactComponent = ReactDOM.render(reactComponentElement, document.getElementById('react-application'));
+
+
+ReactDOM.render(React.createElement(Application, null), document.getElementById('react-application'));
+
+},{"./components/Application.react":160,"react":158,"react-dom":29}],160:[function(require,module,exports){
+var React = require('react');
+var Collection = require('./Collection.react.js');
+
+var Application = React.createClass({displayName: "Application",
+
+	getInitialState: function() {
+		return {
+			collectionTweets: [
+				{id: '1'},
+				{id: '2'},
+				{id: '3'},
+			]
+		};
+	},
+
+	render: function() {
+		return (
+			React.createElement("div", {className: "container-fluid"}, 
+				React.createElement("div", {className: "header"}, 
+					React.createElement("h2", null, "Tweets Collection")
+				), 
+				
+				React.createElement("div", {className: "col-md-8"}, 
+					React.createElement(Collection, {tweets: this.state.collectionTweets})
+				)
+
+			)
+		);
+	}
+
+});
+
+module.exports = Application;
+
+},{"./Collection.react.js":161,"react":158}],161:[function(require,module,exports){
+var React = require('react');
+
+var Collection = React.createClass({displayName: "Collection",
+
+	getListOfTweetIds: function () {
+		return Object.keys(this.props.tweets);
+	},
+
+	getTweetElement: function(tweet) {
+		return (
+			React.createElement("li", null, 
+				React.createElement("h3", null, tweet)
+			)
+			);
+	},
+	
+	render: function() {
+		var tweetElements = this.getListOfTweetIds().map(this.getTweetElement);
+		return (
+			React.createElement("div", null, 
+			tweetElements
+			)
+		);
 	}
 });
-var reactComponentElement = React.createElement(ReactClass);
-var reactComponent = ReactDOM.render(reactComponentElement, document.getElementById('react-application'));
 
-},{"react":158,"react-dom":29}]},{},[159]);
+module.exports = Collection;
+
+},{"react":158}]},{},[159]);
