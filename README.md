@@ -1,4 +1,4 @@
-# react_flux_demo
+# React + Flux Demo
 A demo of React + Flux.
 
 
